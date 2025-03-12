@@ -9,7 +9,7 @@ export class Expense {
   @Prop()
   total: number;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Expense' }] })
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
   users: User[];
 }
 
