@@ -6,6 +6,6 @@ import { ConfigType } from '@nestjs/config';
 export class AppService {
   constructor(@Inject(config.KEY) private c: ConfigType<typeof config>) {}
   getHello() {
-    return { environment: this.c.env || 'BASE' };
+    return { environment: this.c.environment || 'BASE' };
   }
 }

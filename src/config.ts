@@ -4,15 +4,17 @@ import * as process from 'node:process';
 export default registerAs('config', () => {
   return {
     database: {
-      url: process.env.DB_URL,
-      name: process.env.DB_NAME,
-      port: process.env.DB_PORT,
+      host: process.env.DATABASE_HOST,
+      name: process.env.DATABASE_NAME,
+      port: parseInt(process.env.DATABASE_PORT!, 10),
+      type: process.env.DATABASE_TYPE,
+      synchronize: process.env.DATABASE_SYNCHRONIZE,
     },
     dbCredentials: {
-      user: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
     },
     apiKey: process.env.API_KEY,
-    env: process.env.NODE_ENV,
+    environment: process.env.NODE_ENV,
   };
 });
