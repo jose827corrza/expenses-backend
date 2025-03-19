@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Project } from './project.entity';
 
 @Entity()
 export class Expense {
@@ -10,4 +17,14 @@ export class Expense {
 
   @Column()
   name: string;
+
+  @ManyToOne(() => Project, (project) => project.expenses)
+  project: Project;
+
+  @CreateDateColumn({
+    name: 'created_at',
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  createAt: Date;
 }
