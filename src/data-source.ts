@@ -6,11 +6,11 @@ import * as process from 'node:process';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  host: process.env.TYPEORM_DATABASE_HOST,
-  port: Number(process.env.TYPEORM_DATABASE_PORT),
-  username: process.env.TYPEORM_DATABASE_USERNAME,
-  password: process.env.TYPEORM_DATABASE_PASSWORD,
-  database: process.env.TYPEORM_DATABASE_NAME,
+  host: 'localhost',
+  port: 5432,
+  username: 'root',
+  password: '123456',
+  database: 'expenses_db_dev',
   entities: [Expense, Project, User],
   migrations: [__dirname + '**/**/migrations/**{.js,.ts}'],
   synchronize: false,
