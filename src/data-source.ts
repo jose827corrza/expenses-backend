@@ -2,7 +2,6 @@ import { DataSource } from 'typeorm';
 import { Expense } from './expenses/entities/expense.entity';
 import { Project } from './expenses/entities/project.entity';
 import { User } from './users/entities/user.entity';
-import * as process from 'node:process';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
