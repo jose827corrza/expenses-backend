@@ -1,5 +1,12 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Project } from '../../expenses/entities/project.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User {
@@ -9,8 +16,12 @@ export class User {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
+
+  @Exclude({ toPlainOnly: true })
+  @Column()
+  password: string;
 
   @ManyToMany(() => Project)
   @JoinTable()
