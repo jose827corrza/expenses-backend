@@ -23,7 +23,7 @@ export class User {
   @Column()
   password: string;
 
-  @ManyToMany(() => Project)
+  @ManyToMany(() => Project, (project) => project.users)
   @JoinTable()
   projects: Project[];
 }
