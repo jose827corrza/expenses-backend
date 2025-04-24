@@ -66,4 +66,25 @@ export class ProjectService {
 
     return await this.projectRepository.remove(project);
   }
+
+  async findProjectById(id: string) {
+    const project = await this.projectRepository.findOne({
+      where: { id },
+      relations: ['expenses'],
+    });
+
+    if (!project) {
+      throw new NotFoundException();
+    }
+    return project;
+  }
+
+  async shareProjectWithNewUser(email: string, projectId: string) {
+    const user = await this.userService.findUserByEmail(email);
+    const project = await this.findProjectById(projectId);
+
+    project.users = [...project.users, user];
+
+    return await this.projectRepository.save(project);
+  }
 }
