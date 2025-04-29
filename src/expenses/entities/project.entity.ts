@@ -8,8 +8,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Expense } from './expense.entity';
-import { User } from '../../users/entities/user.entity';
 import { Expose } from 'class-transformer';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Project {
@@ -19,7 +19,7 @@ export class Project {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @OneToMany(() => Expense, (expense) => expense.project)
@@ -34,7 +34,6 @@ export class Project {
   createAt: Date;
 
   @ManyToMany(() => User, (user) => user.projects)
-  @JoinTable()
   users: User[];
 
   @Expose({ toPlainOnly: false })

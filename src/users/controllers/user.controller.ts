@@ -8,7 +8,6 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
-  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { User } from '../entities/user.entity';
@@ -18,7 +17,6 @@ import { CreateUserDto, UpdateUserDto } from '../dtos/user.dtos';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   getAllUsers(): Promise<User[]> {
     return this.userService.findAll();

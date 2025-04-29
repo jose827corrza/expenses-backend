@@ -4,7 +4,7 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
+  Param, ParseUUIDPipe,
   Post,
   Put,
   UseInterceptors,
@@ -22,36 +22,32 @@ export class ProjectController {
 
   @Post('add')
   async addToProject(@Body() dto: AddUserToProjectDto) {
-    // TODO implement the shareProjectWithNewUser method from the service and test it
-    return this.projectService.shareProjectWithNewUser(
-      dto.email,
-      dto.projectId,
-    );
+    return await this.projectService.shareProjectWithNewUser(dto);
   }
 
   @Post(':id')
-  createProject(@Param('id') id: string, @Body() dto: CreateProjectDto) {
+  createProject(@Param('id', ParseUUIDPipe) id: string, @Body() dto: CreateProjectDto) {
     return this.projectService.create(id, dto);
   }
 
   @Get(':id')
-  getUserProjects(@Param('id') id: string) {
+  getUserProjects(@Param('id', ParseUUIDPipe) id: string) {
     return this.projectService.findUserProjects(id);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('project/:id')
-  getProjectDetails(@Param('id') id: string) {
+  getProjectDetails(@Param('id', ParseUUIDPipe) id: string) {
     return this.projectService.findProjectById(id);
   }
 
   @Put(':id')
-  updateProject(@Param('id') id: string, @Body() dto: UpdateProjectDto) {
+  updateProject(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateProjectDto) {
     return this.projectService.update(id, dto);
   }
 
   @Delete(':id')
-  deleteProject(@Param('id') id: string) {
+  deleteProject(@Param('id', ParseUUIDPipe) id: string) {
     return this.projectService.delete(id);
   }
 }

@@ -5,8 +5,8 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Project } from '../../expenses/entities/project.entity';
 import { Exclude } from 'class-transformer';
+import { Project } from '../../expenses/entities/project.entity';
 
 @Entity()
 export class User {
@@ -19,11 +19,11 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Exclude({ toPlainOnly: true })
+  @Exclude()
   @Column()
   password: string;
 
-  @ManyToMany(() => Project, (project) => project.users)
+  @ManyToMany(() => Project, (project) => project.users, { cascade: true })
   @JoinTable()
   projects: Project[];
 }

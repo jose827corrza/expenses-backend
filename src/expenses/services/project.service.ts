@@ -1,15 +1,25 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from '../entities/project.entity';
 import { Repository } from 'typeorm';
-import { CreateProjectDto, UpdateProjectDto } from '../dtos/project.dtos';
+import {
+  AddUserToProjectDto,
+  CreateProjectDto,
+  UpdateProjectDto,
+} from '../dtos/project.dtos';
 import { UserService } from '../../users/services/user.service';
+import { User } from '../../users/entities/user.entity';
 
 @Injectable()
 export class ProjectService {
   constructor(
     @InjectRepository(Project)
     private readonly projectRepository: Repository<Project>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
     private userService: UserService,
   ) {}
 
@@ -19,7 +29,6 @@ export class ProjectService {
     if (!user) {
       throw new NotFoundException(`User with id ${userId} does not exist`);
     }
-    // TODO
 
     const newProject = new Project();
     newProject.name = project.name;
@@ -68,23 +77,38 @@ export class ProjectService {
   }
 
   async findProjectById(id: string) {
-    const project = await this.projectRepository.findOne({
-      where: { id },
-      relations: ['expenses'],
-    });
+    try {
+      const project = await this.projectRepository.findOne({
+        where: { id: id },
+        relations: ['expenses'],
+      });
 
+      if (!project) {
+        throw new NotFoundException();
+      }
+      return project;
+    } catch (e) {
+      throw new InternalServerErrorException(e);
+    }
+  }
+
+  async shareProjectWithNewUser(dto: AddUserToProjectDto) {
+    const project = await this.projectRepository.findOne({
+      where: { id: dto.projectId },
+      relations: ['users'],
+    });
     if (!project) {
       throw new NotFoundException();
     }
-    return project;
-  }
+    const user = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
 
-  async shareProjectWithNewUser(email: string, projectId: string) {
-    const user = await this.userService.findUserByEmail(email);
-    const project = await this.findProjectById(projectId);
+    if (!user) {
+      throw new NotFoundException();
+    }
 
-    project.users = [...project.users, user];
-
+    project?.users.push(user);
     return await this.projectRepository.save(project);
   }
 }
