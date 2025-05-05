@@ -46,4 +46,13 @@ export class ExpenseService {
     this.expenseRepository.merge(expense, changes);
     return this.expenseRepository.save(expense);
   }
+
+  async getExpensesByProjectId(id: string) {
+    const project = await this.projectService.findProjectById(id);
+    console.log(project);
+    return await this.expenseRepository.find({
+      relations: { project: true },
+      where: { project: { id: project.id } },
+    });
+  }
 }

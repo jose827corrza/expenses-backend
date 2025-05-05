@@ -36,7 +36,7 @@ export class Project {
   @ManyToMany(() => User, (user) => user.projects)
   users: User[];
 
-  @Expose({ toPlainOnly: false })
+  @Expose({ toPlainOnly: true })
   get total() {
     if (this.expenses) {
       return this.expenses
@@ -46,6 +46,6 @@ export class Project {
           return total + totalExpense;
         }, 0);
     }
-    return 0;
+    return 2222;
   }
 }

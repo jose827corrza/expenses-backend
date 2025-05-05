@@ -14,7 +14,7 @@ export default registerAs('config', () => {
       user: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
     },
-    apiKey: process.env.API_KEY,
+    apiKey: process.env.API_KEY || 'defaultKey',
     environment: process.env.NODE_ENV,
   };
 });

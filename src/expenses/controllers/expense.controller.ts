@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ExpenseService } from '../services/expense.service';
 import { CreateExpenseDto } from '../dtos/expense.dtos';
 import { Expense } from '../entities/expense.entity';
@@ -16,5 +16,10 @@ export class ExpenseController {
       id,
       createExpenseDto,
     );
+  }
+
+  @Get('project/:id')
+  async getExpensesByProjectId(@Param('id') id: string): Promise<Expense[]> {
+    return await this.expenseService.getExpensesByProjectId(id);
   }
 }

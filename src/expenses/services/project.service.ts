@@ -44,7 +44,10 @@ export class ProjectService {
     if (!user) {
       throw new NotFoundException(`User with id ${userId} does not exist`);
     }
-    return await this.projectRepository.find({ where: { users: user } });
+    return await this.projectRepository.find({
+      where: { users: user },
+      relations: { expenses: true },
+    });
   }
 
   async update(projectId: string, changes: UpdateProjectDto): Promise<Project> {
@@ -80,7 +83,7 @@ export class ProjectService {
     try {
       const project = await this.projectRepository.findOne({
         where: { id: id },
-        relations: ['expenses'],
+        relations: { expenses: true, users: true },
       });
 
       if (!project) {

@@ -6,7 +6,7 @@ import {
   Get,
   Param, ParseUUIDPipe,
   Post,
-  Put,
+  Put, Req, UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ProjectService } from '../services/project.service';
@@ -15,7 +15,11 @@ import {
   CreateProjectDto,
   UpdateProjectDto,
 } from '../dtos/project.dtos';
+import { Request } from 'express';
+import { Token } from '../../auth/models/token.model';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('project')
 export class ProjectController {
   constructor(private projectService: ProjectService) {}
@@ -25,14 +29,16 @@ export class ProjectController {
     return await this.projectService.shareProjectWithNewUser(dto);
   }
 
-  @Post(':id')
-  createProject(@Param('id', ParseUUIDPipe) id: string, @Body() dto: CreateProjectDto) {
-    return this.projectService.create(id, dto);
+  @Post()
+  createProject(@Req() req: Request, @Body() dto: CreateProjectDto) {
+    const user = req.user as Token;
+    return this.projectService.create(user.sub, dto);
   }
 
-  @Get(':id')
-  getUserProjects(@Param('id', ParseUUIDPipe) id: string) {
-    return this.projectService.findUserProjects(id);
+  @Get()
+  getUserProjects(@Req() req: Request) {
+    const user = req.user as Token;
+    return this.projectService.findUserProjects(user.sub);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
