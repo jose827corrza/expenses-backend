@@ -23,7 +23,7 @@ export class Project {
   description: string;
 
   @OneToMany(() => Expense, (expense) => expense.project)
-  @JoinTable()
+  // @JoinTable()
   expenses: Expense[];
 
   @CreateDateColumn({
@@ -46,6 +46,6 @@ export class Project {
           return total + totalExpense;
         }, 0);
     }
-    return 2222;
+    return 0;
   }
 }

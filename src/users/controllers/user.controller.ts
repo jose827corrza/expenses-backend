@@ -27,9 +27,9 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
+  @Get('/me')
   // getAllUser(@Param('id', ParseUUIDPipe) id: string): Promise<User> {
-  getAllUser(@Req() req: Request) {
+  getAnUser(@Req() req: Request) {
     const user = req.user as Token;
     return this.userService.findById(user.sub);
   }

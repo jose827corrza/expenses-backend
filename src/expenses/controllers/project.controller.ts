@@ -48,7 +48,10 @@ export class ProjectController {
   }
 
   @Put(':id')
-  updateProject(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateProjectDto) {
+  updateProject(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateProjectDto,
+  ) {
     return this.projectService.update(id, dto);
   }
 

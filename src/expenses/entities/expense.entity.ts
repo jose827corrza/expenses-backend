@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Project } from './project.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Expense {
@@ -18,8 +19,11 @@ export class Expense {
   @Column()
   name: string;
 
-  @ManyToOne(() => Project, (project) => project.expenses)
+  @ManyToOne(() => Project, (project) => project.expenses, { eager: false })
   project: Project;
+
+  @ManyToOne(() => User, (user) => user.expenses)
+  user: User;
 
   @CreateDateColumn({
     name: 'created_at',

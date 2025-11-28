@@ -4,6 +4,7 @@ import { Expense } from '../entities/expense.entity';
 import { Repository } from 'typeorm';
 import { CreateExpenseDto, UpdateExpenseDto } from '../dtos/expense.dtos';
 import { ProjectService } from './project.service';
+import { UserService } from '../../users/services/user.service';
 
 @Injectable()
 export class ExpenseService {
@@ -11,13 +12,19 @@ export class ExpenseService {
     @InjectRepository(Expense)
     private readonly expenseRepository: Repository<Expense>,
     private readonly projectService: ProjectService,
+    private readonly userService: UserService,
   ) {}
 
-  async createExpenseForProject(projectId: string, expense: CreateExpenseDto) {
+  async createExpenseForProject(
+    projectId: string,
+    userId: string,
+    expense: CreateExpenseDto,
+  ) {
     const project = await this.projectService.findProjectById(projectId);
-
+    const user = await this.userService.findById(userId);
     const newExpense = this.expenseRepository.create(expense);
     newExpense.project = project;
+    newExpense.user = user;
 
     return await this.expenseRepository.save(newExpense);
   }
@@ -38,7 +45,7 @@ export class ExpenseService {
     const expense = await this.expenseRepository.findOne({
       where: { id },
     });
-
+    console.log('expense', expense);
     if (!expense) {
       throw new NotFoundException(`Project with id ${id} does not exist`);
     }
@@ -49,10 +56,17 @@ export class ExpenseService {
 
   async getExpensesByProjectId(id: string) {
     const project = await this.projectService.findProjectById(id);
-    console.log(project);
     return await this.expenseRepository.find({
-      relations: { project: true },
+      relations: { project: false },
       where: { project: { id: project.id } },
+    });
+  }
+
+  async getExpensesByUser(id: string) {
+    const user = await this.userService.findById(id);
+    return await this.expenseRepository.find({
+      where: { user },
+      relations: { project: true },
     });
   }
 }
